@@ -1,5 +1,5 @@
 CONF=pif
-CONFLIST=pif picpuf
+CONFLIST=pif picpuf pif2 picpuf2
 EXTRACOPIES=
 
 loadaddr=0x80008000
