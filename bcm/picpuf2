@@ -1,0 +1,64 @@
+dev
+	root
+	cons
+	env
+	pipe
+	proc
+	mnt
+	srv
+	shr
+	dup
+	arch
+	ssl
+	tls
+	cap
+	fs
+	ip		arp chandial ip ipv6 ipaux iproute netlog nullmedium pktmedium ptclbsum inferno
+	draw	screen swcursor
+	mouse	mouse
+#	kbdmap
+#	kbin	kbd latin1
+	uart
+	gpio	gpio
+	spi	spi
+	i2c	i2c
+
+	fakertc
+	ether	netif
+	sd
+	usb
+
+link
+	archbcm2
+	loopbackmedium
+	ethermedium
+	usbdwc
+	etherusb
+	pitft
+
+ip
+	tcp
+	udp
+	ipifc
+	icmp
+	icmp6
+	ipmux
+	il
+
+misc
+	armv7
+	uartmini	gpio
+	sdmmc	emmc
+	dma
+	vcore
+	vfp3	coproc
+
+port
+	int cpuserver = 1;
+
+bootdir
+	/$objtype/bin/paqfs
+	/$objtype/bin/auth/factotum
+	bootfs.paq
+	boot
+
