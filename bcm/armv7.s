@@ -5,6 +5,9 @@
 
 #include "arm.s"
 
+#define CACHELINESZ 	64
+#define ICACHELINESZ	32
+
 #undef DSB
 #undef DMB
 #undef ISB

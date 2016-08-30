@@ -199,7 +199,7 @@ mmurelease(Proc* proc)
 void
 putmmu(uintptr va, uintptr pa, Page* page)
 {
-	int x;
+	int x, s;
 	Page *pg;
 	PTE *l1, *pte;
 
@@ -207,7 +207,7 @@ putmmu(uintptr va, uintptr pa, Page* page)
 	 * disable interrupts to prevent flushmmu (called from hzclock)
 	 * from clearing page tables while we are setting them
 	 */
-	splhi();
+	s = splhi();
 	x = L1X(va);
 	l1 = &m->mmul1[x];
 	if(*l1 == Fault){
@@ -260,12 +260,14 @@ putmmu(uintptr va, uintptr pa, Page* page)
 	/* clear out the current entry */
 	mmuinvalidateaddr(PPN(va));
 
-	cachedwbinv();
-	if(page->txtflush){
-		cacheiinv();
-		page->txtflush = 0;
+	if(page->cachectl[m->machno] == PG_TXTFLUSH){
+		/* pio() sets PG_TXTFLUSH whenever a text pg has been written */
+		cachedwbse((void*)(page->pa|KZERO), BY2PG);
+		cacheiinvse((void*)page->va, BY2PG);
+		page->cachectl[m->machno] = PG_NOFLUSH;
 	}
-	checkmmu(va, PPN(pa));
+	//checkmmu(va, PPN(pa));
+	splx(s);
 }
 
 void*

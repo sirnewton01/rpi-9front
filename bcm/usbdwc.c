@@ -550,7 +550,7 @@ ctltrans(Ep *ep, uchar *req, long n)
 		if(datalen <= 0 || datalen > Maxctllen)
 			error(Ebadlen);
 		/* XXX cache madness */
-		epio->cb = b = allocb(ROUND(datalen, ep->maxpkt) + CACHELINESZ);
+		epio->cb = b = allocb(ROUND(datalen, ep->maxpkt));
 		assert(((uintptr)b->wp & (BLOCKALIGN-1)) == 0);
 		memset(b->wp, 0x55, b->lim - b->wp);
 		cachedwbinvse(b->wp, b->lim - b->wp);
@@ -802,7 +802,7 @@ epread(Ep *ep, void *a, long n)
 		/* fall through */
 	case Tbulk:
 		/* XXX cache madness */
-		b = allocb(ROUND(n, ep->maxpkt) + CACHELINESZ);
+		b = allocb(ROUND(n, ep->maxpkt));
 		p = b->rp;
 		assert(((uintptr)p & (BLOCKALIGN-1)) == 0);
 		cachedinvse(p, n);
@@ -846,14 +846,13 @@ epwrite(Ep *ep, void *a, long n)
 	case Tctl:
 	case Tbulk:
 		/* XXX cache madness */
-		b = allocb(n + CACHELINESZ);
+		b = allocb(n);
 		p = b->wp;
 		assert(((uintptr)p & (BLOCKALIGN-1)) == 0);
 		memmove(p, a, n);
 		cachedwbse(p, n);
-		if(ep->ttype == Tctl) {
+		if(ep->ttype == Tctl)
 			n = ctltrans(ep, p, n);
-		}
 		else{
 			n = eptrans(ep, Write, p, n);
 			epio->lastpoll = TK2MS(m->ticks);

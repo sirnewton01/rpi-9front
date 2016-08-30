@@ -93,6 +93,8 @@ spiinit(void)
 void
 spimode(int mode)
 {
+	if(spi.regs == 0)
+		spiinit();
 	spi.regs->cs = (spi.regs->cs & ~(Cpha | Cpol)) | (mode << 2);
 }
 
@@ -130,7 +132,7 @@ spirw(uint cs, void *buf, int len)
 		spiinit();
 	r = spi.regs;
 	r->dlen = len;
-	r->cs = (cs << Csshift) | Rxclear | Txclear | Dmaen | Adcs | Ta;
+	r->cs = (r->cs & (Cpha | Cpol)) | (cs << Csshift) | Rxclear | Txclear | Dmaen | Adcs | Ta;
 	/*
 	 * Start write channel before read channel - cache wb before inv
 	 */
@@ -141,7 +143,7 @@ spirw(uint cs, void *buf, int len)
 	if(dmawait(DmaChanSpiRx) < 0)
 		error(Eio);
 	cachedinvse(buf, len);
-	r->cs = 0;
+	r->cs &= (Cpha | Cpol);
 	qunlock(&spi.lock);
 	poperror();
 }

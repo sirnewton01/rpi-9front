@@ -134,6 +134,7 @@ spiwrite(Chan*c, void *a, long n, vlong)
 		case CMlossi:
 			break;
 		}
+		poperror();
 		return n;
 	}
 

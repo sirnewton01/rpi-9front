@@ -453,5 +453,6 @@ etherusbpnp(Ether* edev)
 void
 etherusblink(void)
 {
+	// CM: document why this is commented out
 	//addethercard("usb", etherusbpnp);
 }

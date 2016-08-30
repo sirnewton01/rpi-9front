@@ -5,6 +5,8 @@
 
 #include "arm.s"
 
+#define CACHELINESZ 32
+
 TEXT armstart(SB), 1, $-4
 
 	/*

@@ -178,13 +178,17 @@ static int
 fbdefault(int *width, int *height, int *depth)
 {
 	u32int buf[3];
+	char *p;
 
 	if(vcreq(TagGetres, &buf[0], 0, 2*4) != 2*4 ||
 	   vcreq(TagGetdepth, &buf[2], 0, 4) != 4)
 		return -1;
 	*width = buf[0];
 	*height = buf[1];
-	*depth = buf[2];
+	if((p = getconf("bcm2708_fb.fbdepth")) != nil)
+		*depth = atoi(p);
+	else
+		*depth = buf[2];
 	return 0;
 }
 
