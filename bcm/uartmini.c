@@ -67,12 +67,12 @@ interrupt(Ureg*, void *arg)
 	if(ap[MuLsr] & TxRdy)
 		uartkick(uart);
 	if(ap[MuLsr] & RxRdy){
-		if(uart->console){
-			if(uart->opens == 1)
-				uart->putc = kbdcr2nl;
-			else
-				uart->putc = nil;
-		}
+		//if(uart->console){
+		//	if(uart->opens == 1)
+		//		uart->putc = kbdcr2nl;
+		//	else
+		//		uart->putc = nil;
+		//}
 		do{
 			uartrecv(uart, ap[MuIo] & 0xFF);
 		}while(ap[MuLsr] & RxRdy);
@@ -86,8 +86,8 @@ pnp(void)
 	Uart *uart;
 
 	uart = &miniuart;
-	if(uart->console == 0)
-		kbdq = qopen(8*1024, 0, nil, nil);
+	//if(uart->console == 0)
+	//	kbdq = qopen(8*1024, 0, nil, nil);
 	return uart;
 }
 
