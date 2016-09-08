@@ -233,9 +233,23 @@ l2ap(int ap)
 }
 
 int
+cas32(void* addr, u32int old, u32int new)
+{
+	int r, s;
+
+	s = splhi();
+	if(r = (*(u32int*)addr == old))
+		*(u32int*)addr = new;
+	splx(s);
+	if (r)
+		coherence();
+	return r;
+}
+
+int
 cmpswap(long *addr, long old, long new)
 {
-	return cas((ulong*)addr, old, new);
+	return cas32((ulong*)addr, old, new);
 }
 
 void
