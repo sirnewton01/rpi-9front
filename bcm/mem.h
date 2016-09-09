@@ -73,7 +73,7 @@
 /*
  * Legacy...
  */
-#define BLOCKALIGN	64			/* only used in allocb.c */
+#define BLOCKALIGN	32			/* only used in allocb.c */
 #define KSTACK		KSTKSIZE
 
 /*
