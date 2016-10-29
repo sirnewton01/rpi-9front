@@ -1,0 +1,15 @@
+#!/bin/rc
+
+addr=`{cat /net/etherU0/addr | dd -conv ucase >[2]/dev/null }
+
+# Split the address in half and add the two pieces together in decimal to
+#  generate the pseudo random seed
+addr1=`{ echo $addr | dd -count 6 -bs 1 >[2]/dev/null }
+addr2=`{ echo $addr | dd -skip 6 -bs 1 >[2]/dev/null }
+conv='ibase=10;'^$addr1^';'
+addr1=`{echo $conv | bc }
+conv='ibase=10;'^$addr2^';'
+addr2=`{echo $conv | bc }
+
+awk 'BEGIN{srand('^$addr1^' + '^$addr2^' + 1); printf("%d.%d", int(rand() * 253) + 1, int(rand() * 254));}'
+

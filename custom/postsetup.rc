@@ -1,0 +1,46 @@
+#!/bin/rc
+
+echo scroll >>/dev/wctl         # Set auto-scroll for unattended compile
+echo allow >>/srv/hjfs.cmd      # allow changing ownership of files
+
+cd /arm/bin
+for(i in audio auth aux bitsy btc dial disk fs games ip ip/httpd ndb nusb replica upas venti){
+	mkdir $i
+	chgrp -u sys $i
+	chgrp sys $i
+}
+
+# Bind the replacement replacement bcm over /sys/src/bcm
+bind -c ../bcm /sys/src/9/bcm
+
+# Compile system and kernel (ARMv6 and ARMv7)
+cd /sys/src
+objtype=arm mk install
+cd 9/bcm
+mk install && mk install 'CONF=pif' && mk install 'CONF=pif2'
+
+dossrv >/dev/null >[2]/dev/null
+mount -c /srv/dos /n/dos /dev/sdF0/dos
+cp /arm/9pif /arm/9pif2 /n/dos
+
+cp ./termrc /bin/termrc
+cp ./find9p /root/arm/bin
+chmod a+rx /root/arm/bin/find9p
+cp ./bcast9p /root/arm/bin
+chmod a+rx /root/arm/bin/bcast9p
+cp ./linklocalipv4 /root/rc/bin
+
+# Download go bootstrap (386 for now)
+hget http://www.9legacy.org/download/go/go1.7.3-plan9-386-bootstrap.tbz > /tmp/go1.7.3-386.tbz
+cd /tmp
+tar zxf /tmp/go1.7.3-386.tbz
+GOROOT=/tmp/go-plan9-386-bootstrap
+GOROOT_BOOTSTRAP=$GOROOT
+
+# Download and compile go
+git clone -b go1.7.3 https://go.googlesource.com/go /sys/src/go1.7.3
+GOARCH=arm
+GOOS=plan9
+cd /sys/src/go1.7.3/src
+./make.rc
+
