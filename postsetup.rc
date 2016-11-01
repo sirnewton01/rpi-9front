@@ -3,6 +3,8 @@
 echo scroll >>/dev/wctl         # Set auto-scroll for unattended compile
 echo allow >>/srv/hjfs.cmd      # allow changing ownership of files
 
+echo '#!/bin/rc' > /usr/glenda/bin/rc/install   # Work-around for weird go bootstrap bug on plan9
+
 wd=`{ pwd }
 
 cd /arm/bin
@@ -39,13 +41,15 @@ cp $wd/custom/linklocalipv4 /root/rc/bin
 hget http://www.9legacy.org/download/go/go1.7.3-plan9-386-bootstrap.tbz > /tmp/go1.7.3-386.tbz
 cd /tmp
 tar zxf /tmp/go1.7.3-386.tbz
+rm /tmp/go1.7.3-386.tbz
 GOROOT=/tmp/go-plan9-386-bootstrap
 GOROOT_BOOTSTRAP=$GOROOT
 
 # Download and compile go
 git clone -b go1.7.3 https://go.googlesource.com/go /sys/src/go1.7.3
 cd /sys/src/go1.7.3/src
-./make.rc
-cp ../bin/* /root/386/bin
+GOOS=plan9 GOARCH=arm ./make.rc
+cp ../bin/* /root/arm/bin
 
 # TODO cleanup
+rm -rf /tmp/go-plan9-386-bootstrap
