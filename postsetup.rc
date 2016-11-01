@@ -50,7 +50,7 @@ GOROOT_BOOTSTRAP=$GOROOT
 git clone -b go1.7.3 https://go.googlesource.com/go /sys/src/go1.7.3
 cd /sys/src/go1.7.3/src
 GOOS=plan9 GOARCH=arm ./make.rc
-cp ../bin/* /root/arm/bin
+cp ../bin/plan9_arm/* /root/arm/bin
 
 # TODO cleanup
 rm -rf /tmp/go-plan9-386-bootstrap
