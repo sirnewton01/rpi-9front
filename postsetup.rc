@@ -4,6 +4,7 @@ echo scroll >>/dev/wctl         # Set auto-scroll for unattended compile
 echo allow >>/srv/hjfs.cmd      # allow changing ownership of files
 
 echo '#!/bin/rc' > /usr/glenda/bin/rc/install   # Work-around for weird go bootstrap bug on plan9
+chmod a+x /usr/glenda/bin/rc/install
 
 wd=`{ pwd }
 
