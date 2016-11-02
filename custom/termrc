@@ -61,6 +61,7 @@ if(test -e /cfg/$sysname/termrc)
 if(test -r /net/etherU0){
 	ip/ipconfig ether /net/etherU0 '169.254.'^$LINKLOCAL 255.255.0.0
 	aux/listen1 -t tcp!*!564 /bin/exportfs -r / &
+	aux/listen1 -t tcp!*!17010 /bin/cpu -n -R &
 	bcast9p &
 }
 

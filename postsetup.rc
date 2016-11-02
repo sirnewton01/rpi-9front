@@ -15,6 +15,8 @@ for(i in audio auth aux bitsy btc dial disk fs games ip ip/httpd ndb nusb replic
 	chgrp sys $i
 }
 
+mkdir /usr/glenda/bin/arm
+
 # Bind the replacement replacement bcm over /sys/src/bcm
 bind -c $wd/bcm /sys/src/9/bcm
 
