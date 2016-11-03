@@ -17,8 +17,9 @@ for(i in audio auth aux bitsy btc dial disk fs games ip ip/httpd ndb nusb replic
 
 mkdir /usr/glenda/bin/arm
 
-# Bind the replacement replacement bcm over /sys/src/bcm
-bind -c $wd/bcm /sys/src/9/bcm
+# Copy the replacement bcm over /sys/src/bcm
+rm /sys/src/9/bcm/*
+cp $wd/bcm/* /sys/src/9/bcm
 
 # Compile system and kernel (ARMv6 and ARMv7)
 cd /sys/src
