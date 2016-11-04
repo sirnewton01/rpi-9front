@@ -483,4 +483,22 @@ _dinvse:
 	BGT	_dinvse
 	B	_wait
 
+TEXT cmpswap(SB), $0
+	MOVW	ov+4(FP), R1
+	MOVW	ov+8(FP), R2
+spincas:
+	LDREX	(R0), R3
+	CMP.S	R3, R1
+	BNE	fail
+	STREX	R2, (R0), R4
+	CMP.S	$0, R4
+	BNE	spincas
+	MOVW	$1, R0
+	DMB
+	RET
+fail:
+	CLREX
+	MOVW	$0, R0
+	RET
+
 #include "cache.v7.s"
