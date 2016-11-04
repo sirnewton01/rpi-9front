@@ -106,3 +106,6 @@
  */
 #define	PHYSDRAM	0
 #define	IOSIZE		(16*MiB)
+
+#define DMB		WORD $0xf57ff05f
+

@@ -335,12 +335,12 @@ TEXT	_tas(SB), $-4			/* _tas(ulong *) */
 	MOVW	$1,R2		/* new value of (R0) */
 	MOVW	$MAXSC, R8
 tas1:
-	LDREX(5,7)		/* LDREX 0(R5),R7 */
+	LDREX	0(R5), R7	/* LDREX 0(R5),R7 */
 	CMP.S	$0, R7		/* old value non-zero (lock taken)? */
 	BNE	lockbusy	/* we lose */
 	SUB.S	$1, R8
 	BEQ	lockloop2
-	STREX(2,5,4)		/* STREX R2,(R5),R4 */
+	STREX	R2, (R5), R4	/* STREX R2,(R5),R4 */
 	CMP.S	$0, R4
 	BNE	tas1		/* strex failed? try again */
 	DMB
