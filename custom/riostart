@@ -1,0 +1,4 @@
+#!/bin/rc
+window 0,0,161,117 stats -lmisce
+window 219,162,819,562
+
