@@ -34,7 +34,7 @@ rm /n/dos/*
 cp /arm/9pif /arm/9pif2 /n/dos
 cp $wd/bootfiles/* /n/dos
 
-cp $wd/riostart /usr/glenda/bin/rc
+cp $wd/custom/riostart /usr/glenda/bin/rc
 chmod a+x /usr/glenda/bin/rc/riostart
 cp $wd/custom/termrc /bin/termrc
 cp $wd/custom/find9p /root/arm/bin
