@@ -3,9 +3,6 @@
 echo scroll >>/dev/wctl         # Set auto-scroll for unattended compile
 echo allow >>/srv/hjfs.cmd      # allow changing ownership of files
 
-echo '#!/bin/rc' > /usr/glenda/bin/rc/install   # Work-around for weird go bootstrap bug on plan9
-chmod a+x /usr/glenda/bin/rc/install
-
 wd=`{ pwd }
 
 cd /arm/bin
@@ -33,6 +30,10 @@ mount -c /srv/dos /n/dos /dev/sdF0/dos
 rm /n/dos/*
 cp /arm/9pif /arm/9pif2 /n/dos
 cp $wd/bootfiles/* /n/dos
+
+# Clean up /sys/src
+cd /sys/src
+mk clean
 
 cp $wd/custom/riostart /usr/glenda/bin/rc
 chmod a+x /usr/glenda/bin/rc/riostart
