@@ -1,1 +1,0 @@
-readparts=1 nvram=#S/sdM0/nvram bootargs=local!#S/sdM0/fossil
