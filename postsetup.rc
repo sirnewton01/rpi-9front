@@ -53,6 +53,7 @@ GOROOT=/tmp/go-plan9-386-bootstrap
 GOROOT_BOOTSTRAP=$GOROOT
 
 # Download and compile go
+hget https://curl.haxx.se/ca/cacert.pem >/sys/lib/tls/ca.pem # CA Certs
 git clone -b go1.7.3 https://go.googlesource.com/go /sys/src/go1.7.3
 cd /sys/src/go1.7.3/src
 GOOS=plan9 GOARCH=arm ./make.rc
