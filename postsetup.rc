@@ -35,8 +35,16 @@ cp $wd/bootfiles/* /n/dos
 cd /sys/src
 mk clean
 
+# Install the hack font
+hget https://github.com/sirnewton01/plan9-font-hack/releases/download/2-020/hack-font.zip > /tmp/hack-font.zip
+cd /lib/font/bit
+unzip </tmp/hack-font.zip
+rm /tmp/hack-font.zip
+
+# Install custom rio startup, ipv4 link local and terminal startup scripts
 cp $wd/custom/riostart /usr/glenda/bin/rc
 chmod a+x /usr/glenda/bin/rc/riostart
+cp $wd/custom/profile /usr/glenda/lib
 cp $wd/custom/termrc /bin/termrc
 cp $wd/custom/find9p /root/arm/bin
 chmod a+rx /root/arm/bin/find9p
