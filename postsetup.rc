@@ -50,6 +50,8 @@ git clone https://github.com/sirnewton01/p9-tutorial /usr/glenda/tutorial
 # Install custom rio startup, ipv4 link local and terminal startup scripts
 cp $wd/custom/riostart /usr/glenda/bin/rc
 chmod a+x /usr/glenda/bin/rc/riostart
+cp $wd/custom/tutorialstart /usr/glenda/bin/rc
+chmod a+x /usr/glenda/bin/rc/tutorialstart
 cp $wd/custom/profile /usr/glenda/lib
 cp $wd/custom/termrc /bin/termrc
 cp $wd/custom/find9p /root/arm/bin

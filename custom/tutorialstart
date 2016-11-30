@@ -1,0 +1,3 @@
+#!/bin/rc
+cd /usr/glenda/tutorial; acme -l /usr/glenda/tutorial/acme.dump
+
