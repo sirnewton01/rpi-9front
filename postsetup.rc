@@ -44,6 +44,9 @@ cd /lib/font/bit
 unzip </tmp/hack-font.zip
 rm /tmp/hack-font.zip
 
+# Install the plan9 tutorial
+git clone https://github.com/sirnewton01/p9-tutorial /usr/glenda/tutorial
+
 # Install custom rio startup, ipv4 link local and terminal startup scripts
 cp $wd/custom/riostart /usr/glenda/bin/rc
 chmod a+x /usr/glenda/bin/rc/riostart
