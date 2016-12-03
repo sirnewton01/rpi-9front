@@ -2,6 +2,8 @@
 kernel=9pif
 [pi2]
 kernel=9pif2
+[pi3]
+kernel=9pif2
 [pi0]
 kernel=9pif
 [all]
