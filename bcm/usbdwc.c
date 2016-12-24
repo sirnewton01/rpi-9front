@@ -38,9 +38,6 @@ enum
 typedef struct Ctlr Ctlr;
 typedef struct Epio Epio;
 
-static char Ebadlen[] = "bad usb request length";
-static char Enotconfig[] = "usb endpoint not configured";
-
 struct Ctlr {
 	Lock;
 	Dwcregs	*regs;		/* controller registers */
@@ -56,13 +53,20 @@ struct Ctlr {
 };
 
 struct Epio {
-	QLock;
+	union {
+		QLock	rlock;
+		QLock	ctllock;
+	};
+	QLock	wlock;
 	Block	*cb;
 	ulong	lastpoll;
 };
 
 static Ctlr dwc;
 static int debug;
+
+static char Ebadlen[] = "bad usb request length";
+static char Enotconfig[] = "usb endpoint not configured";
 
 static void clog(Ep *ep, Hostchan *hc);
 static void logdump(Ep *ep);
@@ -132,10 +136,10 @@ chansetup(Hostchan *hc, Ep *ep)
 		hcc = 0;
 		break;
 	default:
-		hcc = (ep->dev->nb&Devmax)<<ODevaddr;
+		hcc = ep->dev->nb<<ODevaddr;
 		break;
 	}
-	hcc |= ep->maxpkt | 1<<OMulticnt | (ep->nb&Epmax)<<OEpnum;
+	hcc |= ep->maxpkt | 1<<OMulticnt | ep->nb<<OEpnum;
 	switch(ep->ttype){
 	case Tctl:
 		hcc |= Epctl;
@@ -772,6 +776,7 @@ static long
 epread(Ep *ep, void *a, long n)
 {
 	Epio *epio;
+	QLock *q;
 	Block *b;
 	uchar *p;
 	ulong elapsed;
@@ -779,10 +784,11 @@ epread(Ep *ep, void *a, long n)
 
 	ddprint("epread ep%d.%d %ld\n", ep->dev->nb, ep->nb, n);
 	epio = ep->aux;
+	q = ep->ttype == Tctl? &epio->ctllock : &epio->rlock;
 	b = nil;
-	qlock(epio);
+	qlock(q);
 	if(waserror()){
-		qunlock(epio);
+		qunlock(q);
 		if(b)
 			freeb(b);
 		nexterror();
@@ -792,7 +798,7 @@ epread(Ep *ep, void *a, long n)
 		error(Egreg);
 	case Tctl:
 		nr = ctldata(ep, a, n);
-		qunlock(epio);
+		qunlock(q);
 		poperror();
 		return nr;
 	case Tintr:
@@ -810,7 +816,7 @@ epread(Ep *ep, void *a, long n)
 		cachedinvse(p, nr);
 		epio->lastpoll = TK2MS(m->ticks);
 		memmove(a, p, nr);
-		qunlock(epio);
+		qunlock(q);
 		freeb(b);
 		poperror();
 		return nr;
@@ -821,16 +827,18 @@ static long
 epwrite(Ep *ep, void *a, long n)
 {
 	Epio *epio;
+	QLock *q;
 	Block *b;
 	uchar *p;
 	ulong elapsed;
 
 	ddprint("epwrite ep%d.%d %ld\n", ep->dev->nb, ep->nb, n);
 	epio = ep->aux;
+	q = ep->ttype == Tctl? &epio->ctllock : &epio->wlock;
 	b = nil;
-	qlock(epio);
+	qlock(q);
 	if(waserror()){
-		qunlock(epio);
+		qunlock(q);
 		if(b)
 			freeb(b);
 		nexterror();
@@ -857,7 +865,7 @@ epwrite(Ep *ep, void *a, long n)
 			n = eptrans(ep, Write, p, n);
 			epio->lastpoll = TK2MS(m->ticks);
 		}
-		qunlock(epio);
+		qunlock(q);
 		freeb(b);
 		poperror();
 		return n;
@@ -1007,7 +1015,6 @@ reset(Hci *hp)
 	hp->type = "dwcotg";
 
 	intrenable(hp->irq, hp->interrupt, hp, UNKNOWN, "usbdwcotg");
-
 	return 0;
 }
 

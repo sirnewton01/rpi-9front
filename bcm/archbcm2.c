@@ -219,7 +219,16 @@ archbcm2link(void)
 int
 archether(unsigned ctlrno, Ether *ether)
 {
-	ether->type = "usb";
+	switch(ctlrno){
+	case 0:
+		ether->type = "usb";
+		break;
+	case 1:
+		ether->type = "4330";
+		break;
+	default:
+		return 0;
+	}
 	ether->ctlrno = ctlrno;
 	ether->irq = -1;
 	ether->nopt = 0;
