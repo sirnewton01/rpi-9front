@@ -47,7 +47,7 @@ if(! test -e /srv/cs && ! test -e /net/cs)
 	ndb/cs
 sysname=`{cat /dev/sysname}
 if(~ $#sysname 0 || ~ $sysname ''){
-	sysname=`{ echo 'elros-'^$LINKLOCAL | tr . - }		# default
+	sysname=`{ echo 'feanor-'^$LINKLOCAL | tr . - }		# default
 	echo -n $sysname >/dev/sysname
 }
 
